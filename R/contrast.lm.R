@@ -10,9 +10,24 @@
 contrast <- function (fit, ...) UseMethod("contrast")
 
 # define the gls, lme and geese versions to execute the lm version
-contrast.gls   <- function(fit, ...) contrastCalc(fit, ...)
-contrast.lme   <- function(fit, ...) contrastCalc(fit, ...)
-contrast.geese <- function(fit, ...) contrastCalc(fit, ...)
+contrast.gls   <- function(fit, ...)
+{
+   library(nlme)
+   contrastCalc(fit, ...)
+}
+
+contrast.lme   <- function(fit, ...)
+{
+   library(nlme)
+   contrastCalc(fit, ...)
+}
+
+contrast.geese <- function(fit, ...)
+{
+   library(geepack)
+   contrastCalc(fit, ...)
+}
+
 contrast.lm    <- function(fit, ...) contrastCalc(fit, ...)
 
 
@@ -21,6 +36,7 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
                         weights='equal', conf.int=0.95, 
                         fcType = "simple",
                         fcFunc = I,
+                        covType = NULL,
                         ..., 
                         env=parent.frame(2))
 {
@@ -109,7 +125,15 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
       X <- matrix(apply(weights * X, 2, sum) / sum(weights), nrow=1,
                   dimnames=list(NULL, dimnames(X)[[2]]))
 
-   res <- testStatistic(fit, X, critVal, modelCoef, vcov(fit))
+   if(class(fit)[1] == "lm")
+   {
+      library(sandwich)
+      if(is.null(covType)) covType <- "const"
+      covMat <- vcovHC(fit, type = covType)
+    } else covMat <- vcov(fit)
+       
+   
+   res <- testStatistic(fit, X, critVal, modelCoef, covMat)
    res$df.residual <- idf
    res$cnames <- if (type == 'average') NULL else cnames
    res$nvary <- length(vary)
@@ -117,6 +141,7 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
    res$aCoef <- xa
    res$bCoef <- xb
    res$model <- class(fit)[1]
+   res$covType <- covType
    if (type == 'individual') res <- c(vary, res)
    structure(res, class='contrast')
 }

@@ -39,6 +39,13 @@ print.contrast <- function(x, X=FALSE, fun=function(u) u, ...)
       if (is.matrix(x$X)) dimnames(x$X) <- list(cnames, dimnames(x$X)[[2]])
       print(x$X)
    }
+
+   if(x$model == "lm")
+   {
+      if(x$covType != "const") cat("\nThe", x$covType, "covariance estimator was used.\n")
+    }
+
+     
    invisible()
 }
 

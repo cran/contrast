@@ -79,6 +79,9 @@ Arguments to the contast functions are:
   multiple treatments with control, for example.  If \code{b} is missing, the
   design matrix generated from \code{a} is analyzed alone.
   }
+ \item{covType}{
+  a string matching the method for estimating the covariance matrix. The default value produces the typical estimate. See \code{\link[sandwich]{vcovHC}} for options.
+  }
   \item{cnames}{
   vector of character strings naming the contrasts when
   \code{type="individual"}.  Usually \code{cnames} is not necessary as
@@ -110,7 +113,7 @@ Arguments to the contast functions are:
 }
 
 \seealso{
-  \code{contrast.Design}
+  \code{\link[Design]{contrast.Design}}, \code{\link[sandwich]{vcovHC}}
 }
 \examples{
 library(nlme)

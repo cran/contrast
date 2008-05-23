@@ -67,7 +67,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \title{The \texttt{contrast} Package}
-\author{Max Kuhn, Steve Weston, Jed Wing}
+\author{Max Kuhn, Steve Weston, Jed Wing, James Forester}
 
 <<loadLib, results = hide, echo = FALSE>>=
 library(contrast)
@@ -160,99 +160,10 @@ latex(
 
 The study design was a two--way factorial with $n=24$. The cell means can be labeled as in Table \ref{design1Cells}.
 
-\ctable[label=design1Cells, pos=!h, caption = {The cells of the diet experimental design}]{rcc} 
- {} 
- {
-& \multicolumn{2}{c}{ Diet}\NN
-& Low Fat & High Fat \LL
-Vehicle			& $A$		& $B$ 	\NN
-Compound		& $C$		& $D$ 	\LL
-}	 
-
-The reference cell used by {\tt R}  is cell $D$, the treated samples on a high fat diet.
-
-The model used is
-\begin{align}
-\log\text{Expression}_2 &= \beta_0  \notag \\
-	& + \beta_1\text{Vehicle Group} \notag \\
-	& + \beta_2\text{Low Fat Diet} \notag \\
-	& + \beta_{3}\text{Low Fat Diet and Vehicle Group} \label{E:model1}
-\end{align}
-so that $p=3$. Substituting the appropriate coefficients into each cell produces the parameters in Table \ref{design1Coef}.
-\ctable[label=design1Coef, pos=!h, caption = {The parameter structure of the diet experimental design} ]{rcc} 
- {} 
- {
-& \multicolumn{2}{c}{Diet}\NN
-& Low Fat & High Fat \LL
-Vehicle			& $\beta_0 + \beta_1 + \beta_2 + \beta_{3}$		& $\beta_0 +  \beta_1 $ 	\NN
-Compound		& $\beta_0 + \beta_2$		& $\beta_0$ 	\LL
-}	 
-
-This means that
-\begin{itemize}
-	\item $\beta_1$ tests for diet effect in the treated samples
-	\item $\beta_2$ tests for a compounds effect in the high fat diet samples
-\end{itemize}
-
-
-Fitting the model specified by  (\ref{E:model1}) using \texttt{lm}:
-{\small 
-<<example1LinearMod>>=
-   lmFit1 <- lm(expression ~ (group + diet)^2, data = example1)
-   summary(lmFit1)
-@
-}
-
-To test the treatment effect in the high fat diet, $D-B = -\beta_2$. This coefficient and hypothesis test for the difference between treated and un--treated in the high fat diet group is in the row labeled as \texttt{groupvehicle} in the output of \texttt{summary.lm}. 
-
-
-To compare the compound data and the vehicle data in the low fat diet group, Tables \ref{design1Cells} and \ref{design1Coef} can be used:
-\begin{align}
-C - A &= 	\beta_0 + \beta_2 -(\beta_0+\beta_1+\beta_2+\beta_{3}) \notag \\
-	&= -\beta_1 - \beta_{3} \notag
-\end{align}
-This hypothesis translates to testing $\beta_1 + \beta_{3} = 0$, or a contrast using $c=(0, 1, 0, 1)$. To get the results of the difference between treated and un--treated in the low fat diet group, we (finally) use the contrast function:
-{\small 
-<<example1Contrast>>=
-   highFatDiff <- contrast(
-      lmFit1, 
-      list(diet = "low fat", group = "vehicle"),
-      list(diet = "low fat", group = "treatment"))
-   print(highFatDiff, X = TRUE)
-@
-}
-While the effect of treatment is significantly different when compared to vehicle for both diets, the difference is more pronounced in the high fat diet.
-
-Alternatively, both test can be done in the same call to \texttt{contrast}:
-
-{\small
-<<eachTest>>=
-eachTrmtEffect <- contrast(
-   lmFit1, 
-   list(diet = levels(example1$diet), group = "vehicle"),
-   list(diet = levels(example1$diet), group = "treatment"))  
-print(eachTrmtEffect, X = TRUE)
-@ 
-}
-
-Also, we can use the \texttt{type} argument to compute a single treatment effect averaging over the levels of the other factor:
-
-{\small
-<<meanEffect>>=
-meanTrmtEffect <- contrast(
-   lmFit1, 
-   list(diet = levels(example1$diet), group = "vehicle"),
-   list(diet = levels(example1$diet), group = "treatment"),
-   type = "average")  
-  
-print(meanTrmtEffect, X = TRUE)
-@ 
-}
-
 \begin{figure}[p]
    \begin{center}		
 <<example1Plot, fig = TRUE, echo = FALSE>>=
-   trellis.par.set(col.whitebg())
+   trellis.par.set(col.whitebg(), warn = FALSE)
    
    plotTheme <- col.whitebg()
    
@@ -283,12 +194,120 @@ print(meanTrmtEffect, X = TRUE)
    \end{center}
 \end{figure}
 
+\ctable[label=design1Cells, pos=!h, caption = {The cells of the diet experimental design}]{rcc} 
+ {} 
+ {
+& \multicolumn{2}{c}{ Diet}\NN
+& Low Fat & High Fat \LL
+Vehicle			& $A$		& $B$ 	\NN
+Compound		& $C$		& $D$ 	\LL
+}	 
+
+The reference cell used by {\tt R}  is cell $D$, the treated samples on a high fat diet.
+
+The model used is
+\begin{align}
+\log\text{Expression}_2 &= \beta_0  \notag \\
+	& + \beta_1\text{Vehicle Group} \notag \\
+	& + \beta_2\text{Low Fat Diet} \notag \\
+	& + \beta_{3}\text{Low Fat Diet and Vehicle Group} \label{E:model1}
+\end{align}
+so that $p=3$. Substituting the appropriate coefficients into each cell produces the parameters in Table \ref{design1Coef}.
+\ctable[label=design1Coef, pos=!h, caption = {The parameter structure of the diet experimental design} ]{rcc} 
+ {} 
+ {
+& \multicolumn{2}{c}{Diet}\NN
+& Low Fat & High Fat \LL
+Vehicle			& $\beta_0 + \beta_1 + \beta_2 + \beta_{3}$		& $\beta_0 +  \beta_1 $ 	\NN
+Compound		& $\beta_0 + \beta_2$		& $\beta_0$ 	\LL
+}	 
+
+This means that
+\begin{itemize}
+	\item $\beta_2$ tests for diet effect in the treated samples ($C-D$)
+	\item $\beta_1$ tests for a compounds effect in the high fat diet samples ($B-D$)
+\end{itemize}
+
+
+Fitting the model specified by  (\ref{E:model1}) using \texttt{lm}:
+{\small 
+<<example1LinearMod>>=
+   lmFit1 <- lm(expression ~ (group + diet)^2, data = example1)
+   summary(lmFit1)
+@
+}
+
+To test the treatment effect in the high fat diet, $D-B = -\beta_1$. This coefficient and hypothesis test for the difference between treated and un--treated in the high fat diet group is in the row labeled as \texttt{groupvehicle} in the output of \texttt{summary.lm}. 
+
+
+To compare the compound data and the vehicle data in the low fat diet group, Tables \ref{design1Cells} and \ref{design1Coef} can be used:
+\begin{align}
+C - A &= 	\beta_0 + \beta_2 -(\beta_0+\beta_1+\beta_2+\beta_{3}) \notag \\
+	&= -\beta_1 - \beta_{3} \notag
+\end{align}
+This hypothesis translates to testing $\beta_1 + \beta_{3} = 0$, or a contrast using $c=(0, 1, 0, 1)$. To get the results of the difference between treated and un--treated in the low fat diet group, we (finally) use the contrast function:
+{\small 
+<<example1Contrast>>=
+   highFatDiff <- contrast(
+      lmFit1, 
+      list(diet = "low fat", group = "vehicle"),
+      list(diet = "low fat", group = "treatment"))
+   print(highFatDiff, X = TRUE)
+@
+}
+<<example1ContrastStat, echo = FALSE, results = hide>>=
+basicTestStat <- highFatDiff$testStat
+@   
+While the effect of treatment is significantly different when compared to vehicle for both diets, the difference is more pronounced in the high fat diet.
+
+Alternatively, both test can be done in the same call to \texttt{contrast}:
+
+{\small
+<<eachTest>>=
+eachTrmtEffect <- contrast(
+   lmFit1, 
+   list(diet = levels(example1$diet), group = "vehicle"),
+   list(diet = levels(example1$diet), group = "treatment"))  
+print(eachTrmtEffect, X = TRUE)
+@ 
+}
+
+Also, we can use the \texttt{type} argument to compute a single treatment effect averaging over the levels of the other factor:
+
+{\small
+<<meanEffect>>=
+meanTrmtEffect <- contrast(
+   lmFit1, 
+   list(diet = levels(example1$diet), group = "vehicle"),
+   list(diet = levels(example1$diet), group = "treatment"),
+   type = "average")  
+  
+print(meanTrmtEffect, X = TRUE)
+@ 
+}
+
+Additionally, for ordinary linear regression models, there is an option to use sandwich estimates for the covariance matrix of the parameters. See the \href{http://cran.r-project.org/src/contrib/Descriptions/sandwich.html}{sandwich} package for more details. Going back to our comparison of treated versus control in low fat samples, we can use the HC3 estimate in the contrast.
+
+{\small 
+<<example1Sand>>=
+   highFatDiffSAND <- contrast(
+      lmFit1, 
+      list(diet = "low fat", group = "vehicle"),
+      list(diet = "low fat", group = "treatment"),
+      covType = "HC3")
+   print(highFatDiffSAND)
+@
+}
+
+The $t$--statistic associated with the sandwich estimate is \Sexpr{round(highFatDiffSAND$testStat, 3)} versus \Sexpr{round(basicTestStat, 3)} using the traditional estimate of the covariance matrix.
+
+
 <<lmTest, results = hide, echo = FALSE>>=
    lmTest <- contrast(
       lmFit1, 
       list(diet = "high fat", group = "vehicle"),
       list(diet = "high fat", group = "treatment"))
-   if(!all.equal(lmTest$Pvalue, summary(lmFit1)$coefficients[2,4]))
+   if(abs(lmTest$Pvalue- summary(lmFit1)$coefficients[2,4]) > 0.0001)
       stop("lm test case failed")      
 @
 
@@ -316,7 +335,7 @@ The coefficients and p--values are not wildly different given that the scale is 
       glmFit1, 
       list(diet = "high fat", group = "vehicle"),
       list(diet = "high fat", group = "treatment"))
-   if(!all.equal(glmTest$Pvalue, summary(glmFit1)$coefficients[2,4]))
+   if(abs(glmTest$Pvalue - summary(glmFit1)$coefficients[2,4]) > 0.0001)
       stop("glm test case failed")      
 @
 
@@ -397,7 +416,7 @@ In this example, $n=23$ and $p=8$. This model estimates the residual variance an
 \begin{figure}[p]
    \begin{center}		
 <<example2Plot, fig = TRUE, echo = FALSE>>=
-   trellis.par.set(col.whitebg())
+   trellis.par.set(col.whitebg(), warn = FALSE)
    
    out2 <- stripplot(
       expression ~ factor(day), 
@@ -437,7 +456,7 @@ In this example, $n=23$ and $p=8$. This model estimates the residual variance an
          glsFit, 
          list(group = "1:A"),
          list(group = "4:D"))
-   if(!all.equal(glsTest$Pvalue,  summary(glsFit)$tTable[8,4]))
+   if(abs(glsTest$Pvalue - summary(glsFit)$tTable[8,4])  > 0.0001)
       stop("gls test case failed")      
 @
 
@@ -467,7 +486,7 @@ Comparing this to the \texttt{gls} model results, the default coefficients have 
          lmeFit, 
          list(group = "1:A"),
          list(group = "4:D"))
-   if(!all.equal(lmeTest$Pvalue,  summary(lmeFit)$tTable[8,5]))
+   if(abs(lmeTest$Pvalue - summary(lmeFit)$tTable[8,5])  > 0.0001)
       stop("lme test case failed")      
 @
 \subsection{Generalized Estimating Equations}      
@@ -493,7 +512,7 @@ For this model, a simple Wald test is calculated. The contrast shows a more sign
          geeFit, 
          list(group = "1:A"),
          list(group = "4:D"))
-   if(!all.equal(geeTest$Pvalue,  summary(geeFit)$mean[8,4]))
+   if(abs(geeTest$Pvalue - summary(geeFit)$mean[8,4])  > 0.0001)
       stop("gee test case failed")      
 @     
 
@@ -539,11 +558,13 @@ eachTrmtEffect$foldChange
 
 \end{document}
 
-setwd("Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc")
+setwd("/Users/kuhna03/Documents/Code/contrast/inst/doc/")
 options(width = 80)
 
 Sweave(
-   "Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc/contrast.Rnw",
-   output = "Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc/contrast.tex")
+   "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.Rnw",
+   output = "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.tex")
    
+   
+
    

@@ -67,7 +67,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \title{The \texttt{contrast} Package}
-\author{Max Kuhn, Steve Weston, Jed Wing}
+\author{Max Kuhn, Steve Weston, Jed Wing, James Forester}
 
 
 \begin{document}
@@ -125,6 +125,14 @@ low fat&vehicle&$6$
 }
 The study design was a two--way factorial with $n=24$. The cell means can be labeled as in Table \ref{design1Cells}.
 
+\begin{figure}[p]
+   \begin{center}		
+\includegraphics{contrast-example1Plot}
+      \caption{An interaction plot for the diet gene expression experiment}
+      \label{f:exp1}         
+   \end{center}
+\end{figure}
+
 \ctable[label=design1Cells, pos=!h, caption = {The cells of the diet experimental design}]{rcc} 
  {} 
  {
@@ -155,8 +163,8 @@ Compound		& $\beta_0 + \beta_2$		& $\beta_0$ 	\LL
 
 This means that
 \begin{itemize}
-	\item $\beta_1$ tests for diet effect in the treated samples
-	\item $\beta_2$ tests for a compounds effect in the high fat diet samples
+	\item $\beta_2$ tests for diet effect in the treated samples ($C-D$)
+	\item $\beta_1$ tests for a compounds effect in the high fat diet samples ($B-D$)
 \end{itemize}
 
 
@@ -182,16 +190,16 @@ groupvehicle             -0.56867    0.07380  -7.706 2.07e-07 ***
 dietlow fat              -0.44633    0.07380  -6.048 6.52e-06 ***
 groupvehicle:dietlow fat  0.28150    0.10436   2.697   0.0139 *  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
 
 Residual standard error: 0.1278 on 20 degrees of freedom
-Multiple R-Squared: 0.8447,	Adjusted R-squared: 0.8215 
+Multiple R-squared: 0.8447,	Adjusted R-squared: 0.8215 
 F-statistic: 36.27 on 3 and 20 DF,  p-value: 2.79e-08 
 \end{Soutput}
 \end{Schunk}
 }
 
-To test the treatment effect in the high fat diet, $D-B = -\beta_2$. This coefficient and hypothesis test for the difference between treated and un--treated in the high fat diet group is in the row labeled as \texttt{groupvehicle} in the output of \texttt{summary.lm}. 
+To test the treatment effect in the high fat diet, $D-B = -\beta_1$. This coefficient and hypothesis test for the difference between treated and un--treated in the high fat diet group is in the row labeled as \texttt{groupvehicle} in the output of \texttt{summary.lm}. 
 
 
 To compare the compound data and the vehicle data in the low fat diet group, Tables \ref{design1Cells} and \ref{design1Coef} can be used:
@@ -268,13 +276,28 @@ Contrast coefficients:
 \end{Schunk}
 }
 
-\begin{figure}[p]
-   \begin{center}		
-\includegraphics{contrast-example1Plot}
-      \caption{An interaction plot for the diet gene expression experiment}
-      \label{f:exp1}         
-   \end{center}
-\end{figure}
+Additionally, for ordinary linear regression models, there is an option to use sandwich estimates for the covariance matrix of the parameters. See the \href{http://cran.r-project.org/src/contrib/Descriptions/sandwich.html}{sandwich} package for more details. Going back to our comparison of treated versus control in low fat samples, we can use the HC3 estimate in the contrast.
+
+{\small 
+\begin{Schunk}
+\begin{Sinput}
+> highFatDiffSAND <- contrast(lmFit1, list(diet = "low fat", group = "vehicle"), 
++     list(diet = "low fat", group = "treatment"), covType = "HC3")
+> print(highFatDiffSAND)
+\end{Sinput}
+\begin{Soutput}
+lm model parameter contrast
+
+   Contrast       S.E.     Lower      Upper     t df Pr(>|t|)
+ -0.2871667 0.04467878 -0.380365 -0.1939684 -6.43 20        0
+
+The HC3 covariance estimator was used.
+\end{Soutput}
+\end{Schunk}
+}
+
+The $t$--statistic associated with the sandwich estimate is -6.427 versus -3.891 using the traditional estimate of the covariance matrix.
+
 
 
 \subsection{Generalized Linear Model}
@@ -305,7 +328,7 @@ groupvehicle             -0.38839    0.04928  -7.882 1.47e-07 ***
 dietlow fat              -0.31104    0.04680  -6.647 1.80e-06 ***
 groupvehicle:dietlow fat  0.18929    0.07730   2.449   0.0237 *  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
 
 (Dispersion parameter for gaussian family taken to be 315.6268)
 
@@ -324,7 +347,7 @@ Number of Fisher Scoring iterations: 4
 glm model parameter contrast
 
    Contrast       S.E.     Lower       Upper     t df Pr(>|t|)
- -0.1990949 0.05955574 -0.323326 -0.07486378 -3.34 20   0.0032
+ -0.1990949 0.05955574 -0.323326 -0.07486377 -3.34 20   0.0032
 
 Contrast coefficients:
  (Intercept) groupvehicle dietlow fat groupvehicle:dietlow fat
@@ -664,11 +687,13 @@ Contrast coefficients:
 
 \end{document}
 
-setwd("Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc")
+setwd("/Users/kuhna03/Documents/Code/contrast/inst/doc/")
 options(width = 80)
 
 Sweave(
-   "Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc/contrast.Rnw",
-   output = "Z:/users/kuhna03/Code/ncstats/R/contrast/inst/doc/contrast.tex")
+   "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.Rnw",
+   output = "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.tex")
    
+   
+
    
