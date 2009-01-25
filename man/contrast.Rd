@@ -62,54 +62,46 @@ ratio is used if it is greater than 1; otherwise the negative inverse
 (e.g., \code{-1/ratio}) is returned.
 
 Arguments to the contast functions are:
-  \item{a}{
-  a list containing settings for all predictors that you do not wish to
+  \bold{\code{a}}:  a list containing settings for all predictors that you do not wish to
   set to default (adjust-to) values.  Usually you will specify two
   variables in this list, one set to a constant and one to a sequence of
   values, to obtain contrasts for the sequence of values of an
   interacting factor.  The \code{gendata} function will generate the
   necessary combinations and default values for unspecified predictors.
-  }
-  \item{b}{
-  another list that generates the same number of observations as \code{a},
+  
+
+  \bold{\code{a}}: another list that generates the same number of observations as \code{a},
   unless one of the two lists generates only one observation.  In that
   case, the design matrix generated from the shorter list will have its
   rows replicated so that the contrasts assess several differences
   against the one set of predictor values.  This is useful for comparing
   multiple treatments with control, for example.  If \code{b} is missing, the
   design matrix generated from \code{a} is analyzed alone.
-  }
- \item{covType}{
-  a string matching the method for estimating the covariance matrix. The default value produces the typical estimate. See \code{\link[sandwich]{vcovHC}} for options.
-  }
-  \item{cnames}{
-  vector of character strings naming the contrasts when
+  
+ \bold{\code{covType}}:  a string matching the method for estimating the covariance matrix. The default value produces the typical estimate. See \code{\link[sandwich]{vcovHC}} for options.
+  
+  \bold{\code{cnames}}:  vector of character strings naming the contrasts when
   \code{type="individual"}.  Usually \code{cnames} is not necessary as
   \code{contrast.Design} tries to name the contrasts by examining which
   predictors are varying consistently in the two lists.  \code{cnames} will
   be needed when you contrast "non-comparable" settings, e.g., you
   compare \code{list(treat="drug", age=c(20,30))} with
   \code{list(treat="placebo"), age=c(40,50)}
-  }
-  \item{type}{
-  set \code{type="average"} to average the individual contrasts (e.g., to
+  
+  \bold{\code{type}}:  set \code{type="average"} to average the individual contrasts (e.g., to
   obtain a Type II or III contrast)
-  }
-  \item{weights}{
-  a numeric vector, used when \code{type="average"}, to obtain weighted contrasts
-  }
-  \item{conf.int}{
-  confidence level for confidence intervals for the contrasts
-  }
+  
+  \bold{\code{weights}}:  a numeric vector, used when \code{type="average"}, to obtain weighted contrasts
+  
+  \bold{\code{conf.int}}: confidence level for confidence intervals for the contrasts
+  
 
-  \item{env}{environment in which evaluate fit}
+  \bold{\code{env}}: environment in which evaluate fit
 
-  \item{fcFun}{
-  a function to transform the numerator and denominator of fold changes
-  }  
-  \item{fcType}{
-  a character string: "simple" or "signed"
-  }    
+  \bold{\code{fcFun}}: a function to transform the numerator and denominator of fold changes
+  
+  \bold{\code{fcType}}:  a character string: "simple" or "signed"
+  
 }
 
 \seealso{
