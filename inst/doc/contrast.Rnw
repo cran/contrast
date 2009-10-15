@@ -76,6 +76,7 @@ library(nlme)
 library(lattice)
 library(Hmisc)
 library(geepack)
+options(useFancyQuotes = FALSE)
 @
 
 \begin{document}
@@ -163,28 +164,18 @@ The study design was a two--way factorial with $n=24$. The cell means can be lab
 \begin{figure}[p]
    \begin{center}		
 <<example1Plot, fig = TRUE, echo = FALSE>>=
-   trellis.par.set(col.whitebg(), warn = FALSE)
    
    plotTheme <- col.whitebg()
+   plotTheme$superpose.line$lty <- rep(1, 8)
+
+   trellis.par.set(plotTheme, warn = FALSE)
    
    out <- stripplot(
       expression ~ group, 
       example1,  
       groups = diet,
       as.Table = TRUE,
-      function(x, y, groups, ...)
-      {   
-         groupvalues <- sort(unique(factor(groups)))
-         for (i in seq(along=groupvalues)) 
-         {
-            id <- (groups == groupvalues[i])               
-            panel.xyplot(jitter(as.numeric(x[id]), factor = .25), y[id], 
-               col = plotTheme$superpose.symbol$col[i],
-               pch = plotTheme$superpose.symbol$pch[i], ...)
-            panel.xyplot(as.numeric(unique(sort(x[id]))), tapply(y[id], x[id], mean), 
-               col = plotTheme$superpose.symbol$col[i], type = "l")
-         }
-      },
+      type = c("p", "a", "g"),
       auto.key = list(columns = 2),
       ylab = "Expression")  
    print(out)
@@ -248,11 +239,11 @@ C - A &= 	\beta_0 + \beta_2 -(\beta_0+\beta_1+\beta_2+\beta_{3}) \notag \\
 This hypothesis translates to testing $\beta_1 + \beta_{3} = 0$, or a contrast using $c=(0, 1, 0, 1)$. To get the results of the difference between treated and un--treated in the low fat diet group, we (finally) use the contrast function:
 {\small 
 <<example1Contrast>>=
-   highFatDiff <- contrast(
-      lmFit1, 
-      list(diet = "low fat", group = "vehicle"),
-      list(diet = "low fat", group = "treatment"))
-   print(highFatDiff, X = TRUE)
+  highFatDiff <- contrast(
+                          lmFit1, 
+                          list(diet = "low fat", group = "vehicle"),
+                          list(diet = "low fat", group = "treatment"))
+ print(highFatDiff, X = TRUE)
 @
 }
 <<example1ContrastStat, echo = FALSE, results = hide>>=
@@ -264,11 +255,11 @@ Alternatively, both test can be done in the same call to \texttt{contrast}:
 
 {\small
 <<eachTest>>=
-eachTrmtEffect <- contrast(
-   lmFit1, 
-   list(diet = levels(example1$diet), group = "vehicle"),
-   list(diet = levels(example1$diet), group = "treatment"))  
-print(eachTrmtEffect, X = TRUE)
+  eachTrmtEffect <- contrast(
+                             lmFit1, 
+                             list(diet = levels(example1$diet), group = "vehicle"),
+                             list(diet = levels(example1$diet), group = "treatment"))  
+ print(eachTrmtEffect, X = TRUE)
 @ 
 }
 
@@ -276,13 +267,13 @@ Also, we can use the \texttt{type} argument to compute a single treatment effect
 
 {\small
 <<meanEffect>>=
-meanTrmtEffect <- contrast(
-   lmFit1, 
-   list(diet = levels(example1$diet), group = "vehicle"),
-   list(diet = levels(example1$diet), group = "treatment"),
-   type = "average")  
+  meanTrmtEffect <- contrast(
+                             lmFit1, 
+                             list(diet = levels(example1$diet), group = "vehicle"),
+                             list(diet = levels(example1$diet), group = "treatment"),
+                             type = "average")  
   
-print(meanTrmtEffect, X = TRUE)
+ print(meanTrmtEffect, X = TRUE)
 @ 
 }
 
@@ -399,7 +390,7 @@ The mdoel fit is:
    summary(glsFit)
 @
 }
-In this example, $n=23$ and $p=8$. This model estimates the residual variance and hte within--subject correlation, so $q=2$. The default parameter estimates compare each group to the reference cell (day 1, configuration A). The summary table provides one of the p--values that we are interested in (configuration A vs. B at day 1). An example of obtaining the other p--values is shown below:
+In this example, $n=23$ and $p=8$. This model estimates the residual variance and the within--subject correlation, so $q=2$. The default parameter estimates compare each group to the reference cell (day 1, configuration A). The summary table provides one of the p--values that we are interested in (configuration A vs. B at day 1). An example of obtaining the other p--values is shown below:
 {\small
 <<design2glsCont>>=
    
@@ -416,30 +407,13 @@ In this example, $n=23$ and $p=8$. This model estimates the residual variance an
 \begin{figure}[p]
    \begin{center}		
 <<example2Plot, fig = TRUE, echo = FALSE>>=
-   trellis.par.set(col.whitebg(), warn = FALSE)
    
    out2 <- stripplot(
       expression ~ factor(day), 
       example2,  
       groups = factor(config),
       as.Table = TRUE,
-      function(x, y, groups, ...)
-      {   
-         groupvalues <- sort(unique(factor(groups)))
-         for (i in seq(along=groupvalues)) 
-         {       
-            id <- (groups == groupvalues[i])               
-            panel.xyplot(jitter(as.numeric(x[id]), factor = .25), y[id], 
-               col = plotTheme$superpose.symbol$col[i],
-               pch = plotTheme$superpose.symbol$pch[i], ...)
-            groupMeans <- tapply(y[id], x[id], mean)
-            if(sum(!is.na(groupMeans)) > 1)
-            {
-               panel.xyplot(as.numeric(unique(sort(x[id]))), groupMeans, 
-                  col = plotTheme$superpose.symbol$col[i], type = "l")
-            }
-         }
-      },
+      type = c("p", "a", "g"),
       xlab = "Day",
       ylab = "Log2 Expression",
       auto.key = list(columns = 4))   
@@ -524,7 +498,7 @@ The \texttt{contrast} method also computes fold changes using the follow process
 \item For the two groups defined by the \texttt{a} and \texttt{b} arguments, the predicted outcomes are computed. When the model objects is generated by either \texttt{glm} or \texttt{geese}, the linear predictor is calculated.
 \item The two predicted values are optionally transformed by the \texttt{fcFunc} argument. For our gene expression example, we might use \verb+function(u) 2^u+, while for generalized linear models we might use the inverse link function from the \texttt{family} object. 
 \item The predicted value for the \texttt{a} group is divided by the predicted value for the \texttt{b} group.
-\item If the \texttt{fcType} argument is \texttt{"simple"}, the ratio is returned as the fold change. If the type is \texttt{"signed"}, a different calculation is used. If the simple ratio is less than one, the negative reciprocal of the ratio is returned; otherwise the fold change is equal to the simple ratio
+\item If the \texttt{fcType} argument is \texttt{"simple"}, the ratio is returned as the fold change. \texttt{fcType = "log"} returns the log (base $e$) of the ratio. If the type is \texttt{"signed"}, a different calculation is used. If the simple ratio is less than one, the negative reciprocal of the ratio is returned; otherwise the fold change is equal to the simple ratio
 \end{enumerate}
 
 The fold change results are contained in the output as \texttt{foldchange}. From the first example:
@@ -552,19 +526,5 @@ eachTrmtEffect$foldChange
 {\bf 72}, 851-863.
 
 \end{description}
-
-
-
-
 \end{document}
 
-setwd("/Users/kuhna03/Documents/Code/contrast/inst/doc/")
-options(width = 80)
-
-Sweave(
-   "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.Rnw",
-   output = "/Users/kuhna03/Documents/Code/contrast/inst/doc/contrast.tex")
-   
-   
-
-   
