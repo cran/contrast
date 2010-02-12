@@ -1,6 +1,6 @@
 Package: contrast
-Version: 0.12
-Date: 2009-10-15
+Version: 0.13
+Date: 2010-02-12
 Title: A collection of contrast methods
 Author: Max Kuhn, contributions from Steve Weston, Jed Wing and James
         Forester
@@ -10,8 +10,6 @@ Suggests: lattice, nlme, Hmisc, geepack, MASS, sandwich
 Description: Contrast methods, in the style of the Design package, for
         fit objects produced by the lm, glm, gls, and geese functions.
 License: GPL-2
+Packaged: 2010-02-14 23:36:06 UTC; kuhna03
 Repository: CRAN
-Repository/R-Forge/Project: contrast
-Repository/R-Forge/Revision: 9
-Date/Publication: 2009-10-19 06:48:24
-Packaged: 2009-10-16 20:12:04 UTC; rforge
+Date/Publication: 2010-02-15 05:58:46
