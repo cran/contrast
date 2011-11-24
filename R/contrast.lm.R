@@ -1,13 +1,10 @@
-## This contrast method is very much like contrast.Design, but uses
+## This contrast method is very much like contrast.rms, but uses
 ## the predictFrame function (defined earlier in this file) instead of
 ## the predictDesign function defined in the Design package.  It also
 ## uses the testStatistic function (defined earlier in this file) to make
 ## it more modular.
 
-## Design doesn't have a namespace, so we can't import the method def
-## this next line is taken from Design
-
-contrast <- function (fit, ...) UseMethod("contrast")
+## contrast <- function (fit, ...) UseMethod("contrast")
 
 ## define the gls, lme and geese versions to execute the lm version
 contrast.gls   <- function(fit, ...)
@@ -42,12 +39,12 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
 {
   type <- match.arg(type)
   idf <- fit$df.residual
-  critVal <- if (length(idf) > 0)
+  critVal <- if (length(idf) > 0 && idf > 0)
     qt((1 + conf.int) / 2, idf)
   else
     qnorm((1 + conf.int) / 2)
 
-  da <- do.call('gendata', list(fit=fit, factors=a, env=env))
+  da <- do.call('generateData', list(fit=fit, factors=a, env=env))
   xa <- predictFrame(fit, da, env=env)
   ma <- nrow(xa)
 
@@ -56,7 +53,7 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
       xb <- 0 * xa
       db <- da
     } else {
-      db <- do.call('gendata', list(fit, factors=b, env=env))
+      db <- do.call('generateData', list(fit, factors=b, env=env))
       xb <- predictFrame(fit, db, env=env)
     }
   mb <- nrow(xb)

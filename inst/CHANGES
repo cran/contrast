@@ -1,4 +1,16 @@
 -------------------
+Version: 0.16
+Date: 2011-11-24
+
+The package was updated to work with the rms package instead of the Design 
+package. 
+
+A bug was fixed for generalized linear models with no degrees of freedom, such
+as log-linear models.
+
+The vignette was slightly reformatted.
+
+-------------------
 Version: 0.14
 Date: 2011-07-31
 

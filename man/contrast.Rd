@@ -114,10 +114,9 @@ Orthodont2$newAge <- Orthodont$age - 11
 fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)
 summary(fm1Orth.lme2)
 
-contrast(
-   fm1Orth.lme2,
-   a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),
-   b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+contrast(fm1Orth.lme2,
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
 
 }
 \keyword{models}
