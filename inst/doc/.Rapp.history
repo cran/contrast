@@ -1,0 +1,639 @@
+parted
+18/10
+18/10*17
+17/1.8
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt")
+str(inj)
+head(inj)
+hist(inj$total)
+hist(log10(inj$total))
+table(inj$inj1)
+table(inj$inj2)
+table(inj$inj3)
+which(inj$inj3 == "N")
+levels(inj$inj3)
+levels(inj$inj2)
+table(inj$inj4)
+table(inj$inj5)
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)
+inj <- inj[1:500,]
+#
+apply(inj[, grep("inj", names(inj))],#
+      1,#
+      function(x) sum(x == "1"))
+inj[,500]
+inj[500,]
+inj[484,]
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))
+head(inj)
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)#
+#
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))#
+#
+inj$Acc2Report <- inj$repmonth - inj$accmonth#
+inj$Acc2Final <- inj$repmonth - inj$finmonth
+library(caret)
+names()a
+predictors <- names(inj)#
+predictors <- predictors[predictors != total]#
+predictors <- predictors[grep("inj", predictors)]]
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[grep("inj", predictors)]]
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[grep("inj", predictors)]
+predictors
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[-grep("inj", predictors)]
+predictors
+library(caret)
+sample(1:1000,1)
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)#
+#
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))#
+#
+inj$Acc2Report <- inj$repmonth - inj$accmonth#
+inj$Acc2Final <- inj$repmonth - inj$finmonth#
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[-grep("inj", predictors)]#
+#
+inj$total <- log10(inj$total)#
+#
+ctrl <- trainControl(method = "cv")#
+#
+set.seed(713)#
+rpFit <- train(inj[,predictors], inj$total, "rpart",#
+               tuneLength = 20,#
+               trControl = ctrl)
+rpFit
+sample(1:1000,1)
+#
+set.seed(965)#
+inTrain <- createDataPartition(inj$total, p = 2/3)[[1]]
+#
+#
+set.seed(965)#
+inTrain <- createDataPartition(inj$total, p = 2/3)[[1]]#
+#
+injTrain <- inj[ inTrain,]#
+injTest  <- inj-inTrain,]#
+#
+#
+set.seed(713)#
+rpFit <- train(injTrain[,predictors], injTrain$total, "rpart",#
+               tuneLength = 20,#
+               trControl = ctrl)
+rpFit
+#
+postResample(predict(rpFit, injTes[,predictors]), injTest$total)
+#
+postResample(predict(rpFit, injTest[,predictors]), injTest$total)
+injTest  <- inj[-inTrain,]
+#
+postResample(predict(rpFit, injTest[,predictors]), injTest$total)
+#
+xyplot(predict(rpFit, injTest[,predictors]) ~ injTest$total)
+#
+set.seed(713)#
+plsFit <- train(injTrain[,predictors], injTrain$total, "rpart",#
+               tuneLength = 20,#
+                preProc = c("center", "scale"),#
+               trControl = ctrl)
+plsFit
+#
+postResample(predict(plsFit, injTest[,predictors]), injTest$total)
+#
+xyplot(predict(plsFit, injTest[,predictors]) ~ injTest$total)
+#
+set.seed(713)#
+plsFit <- train(injTrain[,predictors], injTrain$total, "pls",#
+               tuneLength = 20,#
+                preProc = c("center", "scale"),#
+               trControl = ctrl)
+#
+postResample(predict(plsFit, injTest[,predictors]), injTest$total)
+plot(plsFit)
+#
+set.seed(713)#
+plsFit <- train(injTrain[,predictors], injTrain$total, "pls",#
+               tuneLength = 20,#
+                preProc = c("center", "scale"),#
+               trControl = ctrl)#
+set.seed(713)#
+lmFit <- train(injTrain[,predictors], injTrain$total, "lm",#
+                preProc = c("center", "scale"),#
+               trControl = ctrl)
+lmFit
+#
+set.seed(713)#
+rfFit <- train(injTrain[,predictors], injTrain$total, "rf",#
+               tuneLEngth = 5,#
+               trControl = ctrl)
+rfFit
+#
+xyplot(predict(rfFit, injTest[,predictors]) ~ injTest$total)
+#
+set.seed(713)#
+cbFit <- train(injTrain[,predictors], injTrain$total, "cubist",#
+               tuneGrid = expand.grid(#
+                 .committees = c(1, 50, 10, 50, 100),#
+                 .neighbors = c(0, 1, 3, 5, 9)),#
+               trControl = ctrl)
+cbFit
+plot(cbFit)
+#
+xyplot(predict(cbFit, injTest[,predictors]) ~ injTest$total)
+#
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)#
+#
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))#
+#
+inj$Acc2Report <- inj$repmonth - inj$accmonth#
+inj$Acc2Final <- inj$finmonth - inj$accmonth#
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[-grep("inj", predictors)]#
+#
+#
+monthText <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","Aug","Sep","Oct","Nov","Dec")#
+monthIndex <- ((1:120 + 5) %% 12)+1#
+monthKey <- monthText[monthIndex]#
+yearKey <- rep(1989:1999, each = 12)[7:126]#
+#
+AccMonthKey <- paste("Acc", monthKey, sep = "")#
+RepMonthKey <- paste("Rep", monthKey, sep = "")#
+FinMonthKey <- paste("Fin", monthKey, sep = "")#
+#
+inj$AccMonth <- factor(AccMonthKey[inj$accmonth])#
+inj$AccYear <- yearKey[inj$accmonth]#
+inj$RepMonth <- factor(RepMonthKey[inj$repmonth])#
+inj$RepYear <- yearKey[inj$repmonth]#
+inj$FinMonth <- factor(FinMonthKey[inj$finmonth])#
+inj$FinYear <- yearKey[inj$finmonth]#
+#
+indKey <- dummyVars(~AccMonth+RepMonth+FinMonth, data = inj, levelsOnly = TRUE)#
+dummies <- as.data.frame(predict(indKey, inj))#
+#
+inj <- cbind(inj, dummies)#
+#
+predictors2 <- predictors[-grep("month", predictors)]#
+predictors2 <- c(predictors2, names(dummies), "AccYear", "RepYear", "FinYear")#
+#
+#
+#
+inj$total <- log10(inj$total)#
+#
+ctrl <- trainControl(method = "cv")
+rpFit
+#
+set.seed(713)#
+rpFit2 <- train(injTrain[,predictors2], injTrain$total, "rpart",#
+               tuneLength = 30,#
+               trControl = ctrl)
+predictors
+head(inj)
+predictors2 <- predictors[-grep("month", predictors)]#
+predictors2 <- c(predictors2, colnames(dummies), "AccYear", "RepYear", "FinYear")
+predictors2
+#
+set.seed(713)#
+rpFit2 <- train(injTrain[,predictors2], injTrain$total, "rpart",#
+               tuneLength = 30,#
+               trControl = ctrl)
+predictors
+predictors2 %in% colnames(inj)
+colnames(inj) %in% predictors2
+library(caret)#
+#
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)#
+#
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))#
+#
+inj$Acc2Report <- inj$repmonth - inj$accmonth#
+inj$Acc2Final <- inj$finmonth - inj$accmonth#
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[-grep("inj", predictors)]#
+#
+#
+monthText <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","Aug","Sep","Oct","Nov","Dec")#
+monthIndex <- ((1:120 + 5) %% 12)+1#
+monthKey <- monthText[monthIndex]#
+yearKey <- rep(1989:1999, each = 12)[7:126]#
+#
+AccMonthKey <- paste("Acc", monthKey, sep = "")#
+RepMonthKey <- paste("Rep", monthKey, sep = "")#
+FinMonthKey <- paste("Fin", monthKey, sep = "")#
+#
+inj$AccMonth <- factor(AccMonthKey[inj$accmonth])#
+inj$AccYear <- yearKey[inj$accmonth]#
+inj$RepMonth <- factor(RepMonthKey[inj$repmonth])#
+inj$RepYear <- yearKey[inj$repmonth]#
+inj$FinMonth <- factor(FinMonthKey[inj$finmonth])#
+inj$FinYear <- yearKey[inj$finmonth]#
+#
+indKey <- dummyVars(~AccMonth+RepMonth+FinMonth, data = inj, levelsOnly = TRUE)#
+dummies <- as.data.frame(predict(indKey, inj))
+colnames(inj) %in% predictors2
+predictors
+names(inj)
+#
+inj <- cbind(inj, dummies)
+names(inj)
+#
+predictors2 <- predictors[-grep("month", predictors)]#
+predictors2 <- c(predictors2, colnames(dummies), "AccYear", "RepYear", "FinYear")
+predictors2
+predictors2[!(predictors2 %in% colnames(inj))]
+library(caret)#
+#
+inj <- read.delim("~/Dropbox/SpringerVersion/Data/PersonalInjury/persinj.txt", stringsAsFactors = FALSE)#
+inj$inj1 <- paste(inj$inj1)#
+inj$inj2 <- paste(inj$inj2)#
+inj$inj4 <- paste(inj$inj4)#
+inj$inj5 <- paste(inj$inj5)#
+#
+inj$NumNoInjury <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "1"))#
+inj$NumSeverity1 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "2"))#
+inj$NumSeverity2 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "3"))#
+inj$NumSeverity3 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "4"))#
+inj$NumSeverity4 <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "5"))#
+inj$NumFatal <-apply(inj[, grep("inj", names(inj))], 1, function(x) sum(x == "6"))#
+#
+inj$Acc2Report <- inj$repmonth - inj$accmonth#
+inj$Acc2Final <- inj$finmonth - inj$accmonth#
+#
+predictors <- names(inj)#
+predictors <- predictors[predictors != "total"]#
+predictors <- predictors[-grep("inj", predictors)]#
+#
+#
+monthText <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul","Aug","Sep","Oct","Nov","Dec")#
+monthIndex <- ((1:120 + 5) %% 12)+1#
+monthKey <- monthText[monthIndex]#
+yearKey <- rep(1989:1999, each = 12)[7:126]#
+#
+AccMonthKey <- paste("Acc", monthKey, sep = "")#
+RepMonthKey <- paste("Rep", monthKey, sep = "")#
+FinMonthKey <- paste("Fin", monthKey, sep = "")#
+#
+inj$AccMonth <- factor(AccMonthKey[inj$accmonth])#
+inj$AccYear <- yearKey[inj$accmonth]#
+inj$RepMonth <- factor(RepMonthKey[inj$repmonth])#
+inj$RepYear <- yearKey[inj$repmonth]#
+inj$FinMonth <- factor(FinMonthKey[inj$finmonth])#
+inj$FinYear <- yearKey[inj$finmonth]#
+#
+indKey <- dummyVars(~AccMonth+RepMonth+FinMonth, data = inj, levelsOnly = TRUE)#
+dummies <- as.data.frame(predict(indKey, inj))#
+#
+inj <- cbind(inj, dummies)#
+#
+predictors2 <- predictors[-grep("month", predictors)]#
+predictors2 <- c(predictors2, colnames(dummies), "AccYear", "RepYear", "FinYear")#
+#
+#
+#
+inj$total <- log10(inj$total)#
+#
+ctrl <- trainControl(method = "cv")#
+#
+#
+#
+set.seed(965)#
+inTrain <- createDataPartition(inj$total, p = 2/3)[[1]]#
+#
+injTrain <- inj[ inTrain,]#
+injTest  <- inj[-inTrain,]
+rpFit
+#
+set.seed(713)#
+rpFit2 <- train(injTrain[,predictors2], injTrain$total, "rpart",#
+               tuneLength = 30,#
+               trControl = ctrl)
+rpFit2
+plot(rpFit)
+plot(r2pFit)
+plot(rpFit2)
+plot(rpFit)
+rpFit
+#
+set.seed(713)#
+cbFit <- train(injTrain[,predictors2], injTrain$total, "cubist",#
+               tuneGrid = expand.grid(#
+                 .committees = c(1, 50, 10, 50, 100),#
+                 .neighbors = c(0, 1, 3, 5, 9)),#
+               trControl = ctrl)
+cbFit
+#
+xyplot(predict(cbFit, injTest[,predictors]) ~ injTest$total)
+#
+xyplot(predict(cbFit, injTest[,predictors2]) ~ injTest$total)
+tolower("DENDRITIC SPINE DEFICITS IN THE HIPPOCAMPAL CA1 REGION OF YOUNG TG2576 MICE ARE AMELIORATED WITH THE PDE9A INHIBITOR PF-04447943")
+library(RWeka)
+?PART
+library(caret)
+createGrid("PART")
+createGrid("JRip")
+WOW("J48")
+?J48
+J48(Species ~ ., data = iris)
+J48(Species ~ ., data = iris, Weka_control(O = TRUE))
+J48(Species ~ ., data = iris, control = Weka_control(O = TRUE))
+J48(Species ~ ., data = iris, control = Weka_control(O = FALSE))
+WOW("J48")
+#
+m <- PART(Species ~ ., data = iris)#
+m#
+summary(m)
+(0.5227- 0.5211)/ 0.5211
+(0.5227- 0.5211)/ 0.5211*100
+(0.5270- 0.5211)/ 0.5211*100
+(0.5263- 0.5211)/ 0.5211*100
+(0.5303 - 0.5211)/ 0.5211*100
+acc <- c(0.5214, 0.5211, 0.5227, 0.5270, 0.5263, 0.5303, 0.5321)
+library(caret)
+pickSizeTolerance
+acc <- data.frame(Accuracy =  c(0.5214, 0.5211, 0.5227, 0.5270, 0.5263, 0.5303, 0.5321))
+pickSizeTolerance(acc, "Accuracy")
+pickSizeTolerance(acc, "Accuracy", maximize = TRUE)
+acc <- data.frame(Accuracy =  c(0.5214, 0.5211, 0.5227, 0.5270, 0.5263, 0.5303, 0.5321), Variables = c(5, 10, 15, 20, 25, 30, 68))
+pickSizeTolerance(acc, "Accuracy", maximize = TRUE)
+debug(pickSizeTolerance)
+pickSizeTolerance(acc, "Accuracy", maximize = TRUE)
+best
+(x[, metric] - best)/best * -100
+plot(x$Variables, (x[, metric] - best)/best * -100)
+? pickSizeTolerance
+flag
+perf >= tol
+Q
+pickSizeTolerance2 <- function(x, metric, tol = 1.5, maximize)#
+  {#
+    if(!maximize)#
+      {#
+        best <- min(x[,metric])  #
+        perf <- (x[,metric] - best)/best * 100#
+         flag <- perf <= tol#
+      } else {#
+        best <- max(x[,metric])#
+         flag <- perf >= tol#
+        perf <- (x[,metric] - best)/best * -100#
+      }#
+   #
+    min(x[flag, "Variables"])#
+  }
+pickSizeTolerance(acc, "Accuracy", maximize = TRUE)
+Q
+undebug(pickSizeTolerance)
+pickSizeTolerance(acc, "Accuracy", maximize = TRUE)
+pickSizeTolerance2(acc, "Accuracy", maximize = TRUE)
+#
+pickSizeTolerance2 <- function(x, metric, tol = 1.5, maximize)#
+  {#
+    if(!maximize)#
+      {#
+        best <- min(x[,metric])  #
+        perf <- (x[,metric] - best)/best * 100#
+        flag <- perf <= tol#
+      } else {#
+        best <- max(x[,metric])#
+        perf <- (x[,metric] - best)/best * -100#
+        flag <- perf >= tol#
+      }#
+    min(x[flag, "Variables"])#
+  }
+pickSizeTolerance2(acc, "Accuracy", maximize = TRUE)
+library(caret)
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/fda.RData")
+fdaFit
+plot(fdaFit)
+xyplot(Sens+Spec~nprune, data = fdaFit$results,type = "o")
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/rpart.RData")
+plot(rpartFit)
+plot(rpartFit, scales = list(x = list(log= 10)))
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/lr.RData")
+lrFit
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/knn.RData")
+plot(knnFit)
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/c45.RData")
+c45Fit
+library(caret)
+library(RWeka)
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/part.RData")
+partFit
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/ripper.RData")
+ls()
+ripperFit
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/fdaFit.RData")
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/fda.RData")
+plot(fdaFit)
+library(ipred)
+?bagging
+createGrid("gbm"0)
+createGrid("gbm")
+library(caret)
+createGrid("gbm")
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/ncsFit.RData")
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/nscFit.RData")
+load("/Users/kuhna03/Dropbox/SpringerVersion/Data/GrantApplications/ncs.RData")
+library(caret)
+nscFit
+plot(nscFit)
+library(caret)
+createGrid("rf")
+?train
+?randomForest
+library(contrast)
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+traceback()
+debug(contrast::: gendata)
+debug(contrast:::gendata)
+debug(contrast:::gendata.lme)
+debug(contrast:::gendata.default)
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+contrast.lme
+debug(contrastCalc)
+debug(contrast::contrastCalc)
+debug(contrast:::contrastCalc)
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+class(fit)
+gendata.lme
+do.call("gendata", list(fit = fit, factors = a, env = env))
+gendata
+debug(do.call("gendata", list(fit = fit, factors = a, env = env)))
+debug(gendata.default)
+do.call("gendata", list(fit = fit, factors = a, env = env))
+gendata(fit)
+?gendata
+factors
+a
+gendata(fit, Sex = "Male", newAge = -3)
+do.call("gendata.default", list(fit = fit, factors = a, env = env))
+gendata
+contrast
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)#
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+library(contrast)
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)#
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 8 - 11),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 10 - 11))
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)#
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = ),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 0))
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)#
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = levels(Orthodont2$Sex), newAge = 0),#
+         b = list(Sex = levels(Orthodont2$Sex), newAge = 0))
+library(nlme)#
+Orthodont2 <- Orthodont#
+Orthodont2$newAge <- Orthodont$age - 11#
+fm1Orth.lme2 <- lme(distance ~ Sex*newAge, data = Orthodont2, random = ~ newAge | Subject)#
+summary(fm1Orth.lme2)#
+#
+contrast(fm1Orth.lme2,#
+         a = list(Sex = "Female", newAge = 0),#
+         b = list(Sex = "Male", newAge = 0))
+library(contrast)
+library(contrast)# Create 2x2 contingency table.counts=c(50,50,30,70)row <-    gl(2,2,4)column <- gl(2,1,4)mydata <- data.frame(row,column,counts)print(mydata)# Show levels of 2x2 tablelevels(mydata$row)levels(mydata$column)# Models, no interaction, and interactionfitglm0 <- glm(counts ~ row + column,              family=poisson(link="log"))fitglm  <- glm(counts ~ row + column + row*column, family=poisson(link="log"))# Contrasts for model without interaction works fine!anova(fitglm0)summary(fitglm0)con0<-contrast(fitglm0,list(row="1",column="1"))print(con0,X=TRUE)# Contrast for model with interaction does not work.anova(fitglm)summary(fitglm)con<-contrast(fitglm,list(row="1",column="1")print(con,X=TRUE)
+contrast(fitglm,list(row="1",column="1"),list(row="1",column="2"))
+debug(contrast:::contrastCalc)
+contrast(fitglm,list(row="1",column="1"),list(row="1",column="2"))
+odf
+idf
+length(idf) > 0
+idf > 0
+qnorm((1 + conf.int)/2)
+testStatistic
+fit
+fit$df
+df
+library(contrast)# Create 2x2 contingency table.counts=c(50,50,30,70)row <-    gl(2,2,4)column <- gl(2,1,4)mydata <- data.frame(row,column,counts)print(mydata)# Show levels of 2x2 tablelevels(mydata$row)levels(mydata$column)# Models, no interaction, and interactionfitglm0 <- glm(counts ~ row + column,              family=poisson(link="log"))fitglm  <- glm(counts ~ row + column + row*column, family=poisson(link="log"))# Contrasts for model without interaction works fine!anova(fitglm0)summary(fitglm0)con0<-contrast(fitglm0,list(row="1",column="1"))print(con0,X=TRUE)# Contrast for model with interaction does not work.anova(fitglm)summary(fitglm)con<-contrast(fitglm,list(row="1",column="1")print(con,X=TRUE)
+contrast(fitglm,list(row="1",column="1"),list(row="1",column="2"))
+contrast(fitglm,list(row="1",column="1"),list(row="2",column="1"))
+library(contrast)# Create 2x2 contingency table.counts=c(50,50,30,70)row <-    gl(2,2,4)column <- gl(2,1,4)mydata <- data.frame(row,column,counts)print(mydata)# Show levels of 2x2 tablelevels(mydata$row)levels(mydata$column)# Models, no interaction, and interactionfitglm0 <- glm(counts ~ row + column,              family=poisson(link="log"))fitglm  <- glm(counts ~ row + column + row*column, family=poisson(link="log"))# Contrasts for model without interaction works fine!anova(fitglm0)summary(fitglm0)con0<-contrast(fitglm0,list(row="1",column="1"))print(con0,X=TRUE)# Contrast for model with interaction does not work.anova(fitglm)summary(fitglm)con<-contrast(fitglm,list(row="1",column="1")print(con,X=TRUE)
+contrast(fitglm,list(row="1",column="1"),list(row="2",column="1"))
+setwd("~/Code/contrast/pkg/contrast/inst/doc/")
+Sweave("contrast.Rnw")
+library(doSMP)
+install.packages("doSMP", repos = "http://cran.r-project.org")
+library(doSMP)
+?doSMP
+? registerDoSMP
+w <- startWorkers(2)#
+registerDoSMP(w)
+library(caret)
+?train
+data(iris)#
+TrainData <- iris[,1:4]#
+TrainClasses <- iris[,5]#
+#
+knnFit1 <- train(TrainData, TrainClasses,#
+                 method = "knn",#
+                 preProcess = c("center", "scale"),#
+                 tuneLength = 10,#
+                 trControl = trainControl(method = "cv", verboseIter = TRUE))
+knnFit1
+data(iris)#
+TrainData <- iris[,1:4]#
+TrainClasses <- iris[,5]#
+#
+knnFit1 <- train(TrainData, TrainClasses,#
+                 method = "knn",#
+                 preProcess = c("center", "scale"),#
+                 tuneLength = 10,#
+                 trControl = trainControl(method = "cv"))
+?stopWrokers
+?stopWorkers
+stopWorkers(w)

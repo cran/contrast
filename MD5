@@ -1,4 +1,4 @@
-f7ad103b74530f1333b4623782a6b58e *DESCRIPTION
+7c2184ba2f676af79c556f8c00e31dd3 *DESCRIPTION
 aba61032b9c9a153c46fe33d25a2c30d *NAMESPACE
 5e9d191406604fe51d5e6768a31b35bb *R/contrast.lm.R
 2fe995b9b0c48f0748ee5cbe6dcdb8a0 *R/gets.R
@@ -6,7 +6,7 @@ aba61032b9c9a153c46fe33d25a2c30d *NAMESPACE
 3bdedf31badabda48c1ecd6074a57574 *R/model.frames.R
 a55dd94ed6dbe6ac69b4e8368effaf96 *R/print.contrast.R
 fe6fc965db98d2dc1e9a9ca8057e293c *R/testStatistic.R
-4d767128d97d32dbb8f19c1028ccbf15 *inst/CHANGES
+3ed4fa01d1c8876d374ad49338287d2a *inst/CHANGES
 da1f8945b9922e2214bab16ab0e1ff6c *inst/doc/contrast.Rnw
-ccf339ed68d6c1046a4edf515aebfbbd *inst/doc/contrast.pdf
-982a93f76d098eb58cb9ef0083d03341 *man/contrast.Rd
+56f38a0bf23b04a7e74f1058bd5c6fbf *inst/doc/contrast.pdf
+4e958e6255698ebbe6381efea0042e5f *man/contrast.Rd
