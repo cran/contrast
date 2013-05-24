@@ -38,11 +38,6 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
                          env=parent.frame(2))
 {
   type <- match.arg(type)
-  idf <- fit$df.residual
-  critVal <- if (length(idf) > 0 && idf > 0)
-    qt((1 + conf.int) / 2, idf)
-  else
-    qnorm((1 + conf.int) / 2)
 
   da <- do.call('generateData', list(fit=fit, factors=a, env=env))
   xa <- predictFrame(fit, da, env=env)
@@ -127,12 +122,15 @@ contrastCalc <- function(fit, a, b, cnames=NULL,
     {
       library(sandwich)
       if(is.null(covType)) covType <- "const"
-      covMat <- vcovHC(fit, type = covType)
+      covMat <- try(vcovHC(fit, type = covType), silent = TRUE)
+      if(class(covMat)[1] == "try-error") {
+        warning("Sandwich estimate failed; using standard estimate instead")
+        covMat <- vcov(fit)
+      }
     } else covMat <- vcov(fit)
   
   
-  res <- testStatistic(fit, X, critVal, modelCoef, covMat)
-  res$df.residual <- idf
+  res <- testStatistic(fit, X, modelCoef, covMat, conf.int = conf.int)
   res$cnames <- if (type == 'average') NULL else cnames
   res$nvary <- length(vary)
   res$foldChange <- fc
