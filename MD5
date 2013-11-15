@@ -1,12 +1,13 @@
-35b3336201bcd4eb72bb6014a9a0ee0e *DESCRIPTION
+a2de754946ed50c7456235325f855994 *DESCRIPTION
 aba61032b9c9a153c46fe33d25a2c30d *NAMESPACE
 c3da7409b0212f60ab91b24d6c67f801 *R/contrast.lm.R
-2fe995b9b0c48f0748ee5cbe6dcdb8a0 *R/gets.R
+f0c54dde390073c965db9b53498e5296 *R/gets.R
 1ffedfb3d8f6d3b2008854cdf564f50a *R/misc.R
 3bdedf31badabda48c1ecd6074a57574 *R/model.frames.R
 a55dd94ed6dbe6ac69b4e8368effaf96 *R/print.contrast.R
-96a38a03789ca1b2725786a52a5e41d8 *R/testStatistic.R
-620d39dc0cfe784142878ab0daccc413 *inst/NEWS.Rd
+57398a2af5f69b14e4f1eaefe3406aef *R/testStatistic.R
+bc20c474a9e34e90881ccfff4cc1c065 *build/vignette.rds
+bdea9c49a810cf8abea19ab74355c041 *inst/NEWS.Rd
 989f67daa08420e093eb3558563d418e *inst/doc/contrast.R
 50756b6a4fb7fba35ac0b46ec29760e1 *inst/doc/contrast.Rnw
 dc59e55cd5ac51d0435cca5c3b44d649 *inst/doc/contrast.pdf

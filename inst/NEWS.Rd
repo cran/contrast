@@ -3,6 +3,13 @@
 \title{News for Package \pkg{contrast}}
 \newcommand{\cpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 
+\section{Changes in version 0.19}{
+\itemize{
+\item For \code{lme} models, Thorn Thaler found a bug in some models where the calculaiton of model degrees of freedon could not be determined and proposed a fix. 
+}
+}
+
+
 \section{Changes in version 0.18}{
 \itemize{
 \item If the sandwich estimate failed, the traditional covariance estimator is used instead.
