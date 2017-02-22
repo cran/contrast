@@ -2,10 +2,12 @@
 # It was copied from the rms package, written by Frank Harrell.
 print.contrast <- function(x, X=FALSE, fun=function(u) u, ...)
 {
-   testLabels <- switch(
-      x$model,
-      lm =, glm =, lme =, gls = c("t", "Pr(>|t|)"),
-      geese = c("Z", "Pr(>|Z|)"))
+  if (inherits(x$model, "geese"))
+    testLabels <- c("Z", "Pr(>|Z|)")
+  else if (inherits(x$model, "gls") || inherits(x$model, "lme") || inherits(x$model, "lm"))
+    testLabels <- c("t", "Pr(>|t|)")
+  else
+    testLabels <- NA
       
    w <- x[c("Contrast", "SE", "Lower", "Upper", "testStat", "df", "Pvalue")]
    w$testStat <- round(w$testStat, 2)
