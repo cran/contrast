@@ -20,4 +20,17 @@ test_that("gls models", {
         summary(gls_fit_1)$tTable["Block.L", "p-value"],
         c_1$Pvalue
     )
+    expect_equal(c_1$df.residual, gls_fit_1$dims$N - gls_fit_1$dims$p)
+    expect_equal(
+        drop(c_1$var),
+        drop(c_1$X %*% vcov(gls_fit_1) %*% t(c_1$X))
+    )
+})
+
+test_that("gls formulas can use a supplied environment", {
+    env <- new.env(parent = globalenv())
+    expect_identical(
+        environment(contrast:::modelFormula(gls_fit_1, env = env)),
+        env
+    )
 })
